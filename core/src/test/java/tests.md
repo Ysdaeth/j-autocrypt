@@ -1,0 +1,1 @@
+EncryptionManager and HasherManager are tested in the `integration-tests` module 

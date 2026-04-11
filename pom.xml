@@ -2,48 +2,46 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.github.ysdaeth</groupId>
-  <artifactId>j-autocrypt</artifactId>
-  <version>0.1-snapshot</version>
-  <packaging>jar</packaging>
+  <groupId>dev.ysdaeth.autocrypt</groupId>
+  <artifactId>j-autocrypt-parent</artifactId>
+  <version>0.1</version>
+  <packaging>pom</packaging>
 
-  <name>j-autocrypt</name>
+  <name>jautocrypt</name>
+  <modules>
+    <module>api</module>
+    <module>aes-gcm</module>
+    <module>core</module>
+    <module>integration-tests</module>
+    <module>h-mac-sha</module>
+  </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>25</maven.compiler.release>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>6.0.3</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
-
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>6.0.3</version>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>6.0.3</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>6.0.3</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.github.ysdaeth</groupId>
-      <artifactId>java-common-utils</artifactId>
-      <version>1.1.0</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
+
 
   <build>
     <plugins>
@@ -84,7 +82,7 @@
 
   <distributionManagement>
     <repository>
-      <id>github</id>
+      <id>ys-git</id>
       <name>GitHub Ysdaeth Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/Ysdaeth/j-autocrypt</url>
     </repository>

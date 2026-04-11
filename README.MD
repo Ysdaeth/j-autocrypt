@@ -1,126 +1,233 @@
 # j-autocrypt
-
-Encryption and hashing library that automatically handles algorithm resolution, 
+Encryption and hashing library to automatically handle algorithm resolution, 
 eliminating the need to store algorithm metadata for decryption and hash comparison.
 
+Main
+- [How to use](#how-to-use)
+- [Bytes encoding](#bytes-encoding)
+- [TODO list](#target-list)
+- [Requirements](#requirements)
+
+API
+- [API MODULE](#api-module)
+    - [AlgorithmIdentifier](#algorithmidentifierclass)
+    - [AlgorithmOutput](#algorithmoutputclass)
+    - [Encryptor](#encryptorclass)
+    - [KeyedHasher](#keyedhasherclass)
+
+Core
+- [CORE MODULE](#core-module)
+    - [HashingManager](#hashingmanagerclass)
+    - [KeyedHasherRegistry](#keyedhasherregistryclass)
+    - [EncryptionManager](#encryptionmanagerclass)
+    - [EncryptorRegistry](#encryptorregistryclass)
+
+API Implementations
+- [AES GCM]()
+
+## Bytes encoding
+Encoded bytes are bytes produced by the algorithm and are wrapped by the [AlgorithmOutput](#algorithmoutputclass) class object.
+Encoded bytes are in the following order:
+- Algorithm type (1 byte) i.e: AES.
+- Algorithm variant (1byte) i.e: GCM
+- Metadata bytes (Optional) i.e: metadata length, initial vector, salt, etc.
+- Main algorithm bytes (hash or encrypted bytes produced by the implementation)
+Metadata bytes are optional and their presence depends on the algorithm implementation.
+
+## How to use
+> [!NOTE]
+> GitHub and Maven packages are not available, to use library clone repository and install dependencies locally.
+> Packages download will be available after Jun 2026
+
+### Project object model
+We will focus on the Encryption part, but hashing part is almost the same.  
+First, lets install [core](#core-module) package and one of the [Encryptor](#encryptorclass) implementations, 
+in this case we will use [AES GCM](#encryptoraesgcmclass),but you can create your own implementation or 
+install other dependency.
+```xml
+<dependency>
+    <groupId>dev.ysdaeth.autocrypt</groupId>
+    <artifactId>j-autocrypt-core</artifactId>
+    <version>0.1</version>
+</dependency>
+
+<dependency>
+    <groupId>dev.ysdaeth.autocrypt</groupId>
+    <artifactId>j-autocrypt-aes-gcm</artifactId>
+    <version>0.1</version>
+</dependency>
+```
+
+---
+### Register Encryptor
+Now, lets create [EncryptorRegistry](#encryptorregistryclass) and register AES GCM encryptor. Registry method
+accepts Supplier<[Encryptor](#encryptorclass)>, but to keep example simple, we will pass instance reference
+as an argument and make the registry to wrap it with the supplier internally.
+```java
+Encryptor aes = new EncryptorAesGcm();
+EncryptorRegistry registry = new EncryptorRegistry();
+registry.register(aes);
+```
+> [!TIP]
+> You can achieve the same effect with static method and multiple lambdas
+```java
+EncryptorRegistry registry = EncryptorRegistry.of(
+        EncryptorAesGcm::new, other1::new, other2::new, ...
+);
+```
+
+---
+### Encryption Manager - encryption
+We already have the EncryptorRegistry, now we can inject it into 
+[EncryptionManager](#encryptionmanagerclass). When encrypting we need to create or use static 
+[AlgorithmIdentifier](#algorithmidentifierclass) to specify which algorithm we want to use.
+
+```java
+EncryptionManager manager = new EncryptionManager(registry);
+
+byte[] secret = "secret".getBytes();
+Key secretKey = KeyGenerator.getInstance("AES").generateKey();
+
+AlgorithmIdentifier identifier = AlgorithmIdentifier.AES_GCM;
+AlgorithmOutput output = manager.encrypt(secret, secretKey, identifier);
+
+byte[] encodedBytes = output.getEncoded();
+```
+
+---
+### Encryption Manager - decryption
+Finally, when we want to decrypt our data we can use `encodedBytes` to provide decryptor. 
+Here we wrap encoded bytes with [AlgorithmOutput](#algorithmoutputclass). Encoded bytes must follow rules of the [Bytes encoding](#bytes-encoding)
+```java
+AlgorithmOutput output = new AlgorithmOutput( encodedBytes );
+byte[] decrypted = manager.decrypt(output, secretKey);
+```
+> [!NOTE]  
+> In this example we don't need to specify the AlgorithmIdentifier because it is already computed in our encrypted secret 
 
 ---
 
-Core
-- [Algorithm Identifier](#algorithmidentifierclass)
-- [Bytes encoding](#bytes-encoding)
-
-How to use
-- [Introduction](#how-to-use)
-- [Encryption manager](#hashing-manager)
-- [Hashing manager](#hashing-manager)
-
-Algorithms details
-- [AES GCM](#aes-gcm)
-- [HMac Sha 224-512](#hmac-sha-224-512)
-
-Other
-- [Requirements](#requirements)
-- [Target List](#target-list)
-
-
-
-## Core
+## API MODULE
+Api module contains interfaces for the 3rd party applications or
+libraries associated with this library. It allows to extend hashing and encryption algorithms range used by
+the [EncryptionManager](#encryptionmanagerclass) and [HashingManager](#hashingmanagerclass) from the [Core module](#core-module)  
+*Install API package with maven*
+```xml
+<dependency>
+    <groupId>dev.ysdaeth.autocrypt</groupId>
+    <artifactId>j-autocrypt-api</artifactId>
+    <version>0.1</version>
+</dependency>
+```
 ### AlgorithmIdentifier.class
 Algorithm identifier represents the bytes pair to identify the algorithm instance.
 First byte is for algorithm type identification, for example 'AES', and second byte is algorithm variant like 'GCM'.
 
+---
 ### AlgorithmOutput.class
-Algorithm output is a wrapper for the encoded bytes created by the algorithm. Structure of the algorithm
-output is as follows:
-```
-encoded = [algorithm type byte],[algorithm variant byte],[remaining bytes]
-```
-Algorithm type byte identifies algorithm type like 'AES'. Algorithm variant byte identifies variant like 'GCM'.
-remaining bytes are bytes that algorithm implementation operates on, and can contain optional algorithm metadata bytes,
-which presence depends on the algorithm implementation, and main encrypted bytes.
+Algorithm output is a wrapper for the [encoded bytes](#bytes-encoding) created by the algorithm.
 
-### Bytes encoding
-Encoded bytes are bytes produced by the algorithm, and contain:
-- Metadata for algorithm identifier, which contains algorithm type and variant (2 bytes total).
-- Algorithm metadata byte array (Optional)
-- Main algorithm bytes (hash or encrypted bytes)
+---
+### Encryptor.class
+Interface for the instances, which create [AlgorithmOutput](#algorithmoutputclass) with secret key. 
+It allows to create encrypted data and store all non-secret metadata required for decryption (initial vector, etc.),
+and encrypted bytes.
 
-Algorithm identifier bytes are required, but algorithm metadata bytes are optional and their presence depends on the
-algorithm implementation, i.e: AES GCM metadata bytes are initial vector bytes and metadata length byte
-(since IV length can fit within one byte).
+---
+### KeyedHasher.class
+Interface for the instances, which create [AlgorithmOutput](#algorithmoutputclass) with secret key.
+It allows to create hash of the data, which should store all non-secret metadata for hash comparison (salt, etc.), 
+and hash itself.
 
-## How to use
-Encryption manager and Hashing manager provides easier way for encryption and hashing data, without need for a saving
-algorithm assigned to the algorithm output, and automatically resolves algorithms used for cryptographic backwards
-operations like decryption or hash comparison.
+---
 
-### Encryption manager
-Encryption manager creates encoded bytes that contain algorithm identifier bytes, optional algorithm metadata bytes
-based on the algorithm instance, and main bytes which are actual encrypted bytes.
+### Hasher.class
+Interface for the instances, which create [AlgorithmOutput](#algorithmoutputclass).
+It allows to create hash of the data, which should store all non-secret metadata for hash comparison (salt, etc.),
+and hash itself.
 
-#### Encryption
-Creating encoded bytes with encrypted bytes, based on the algorithm identifier.
+---
+
+## CORE MODULE
+Core module contains hashing and encryption managers which are core of the library. These components
+are responsible for dynamic selection of the cryptographic algorithm implementations to produce 
+[AlgorithmOutput](#algorithmoutputclass).  
+When performing encryption or hashing, you must provide the  [AlgorithmIdentifier](#algorithmoutputclass) and data to perform
+cryptographic operation.   
+For decryption or hash verification the algorithm identifier is resolved from the encoded bytes, and proper 
+algorithm implementation is provided.
+*Install CORE package with maven:*
+```xml
+<dependency>
+    <groupId>dev.ysdaeth.autocrypt</groupId>
+    <artifactId>j-autocrypt-core</artifactId>
+    <version>0.1</version>
+</dependency>
 ```
-EncryptionManager manager = new EncryptionManager();
-byte[] secret = new byte[]{1,2,3};
-SecretKey key = ...;
-Algorithmidentifier identifier = AlgorithmIdentifier.AES_GCM;
-AlgorithmOutput encoded = manager.encrypt(secret, key, identifier );
+### HashingManager.class
+Is responsible for data hashing based on the selected [AlgorithmIdentifier](#algorithmidentifierclass) and automatic
+algorithm implementation selection for the hash verification based on the [bytes encoding](#bytes-encoding)
+
+---
+### KeyedHasherRegistry.class
+Keyed hasher registry stores instances of the [KeyedHasher](#keyedhasherclass)
+It is wrapper class for Map<[AlgorithmIdentifier](#algorithmidentifierclass),[KeyedHasher](#keyedhasherclass)>
+
+---
+### EncryptionManager.class
+It is responsible for data encryption based on the selected [AlgorithmIdentifier](#algorithmidentifierclass) and
+automatic algorithm implementation selection for data decryption based on the [bytes encoding](#bytes-encoding)
+
+---
+### EncryptorRegistry.class
+Encryptor registry stores instances of the [Encryptor](#encryptorclass). 
+It is wrapper class for Map<[AlgorithmIdentifier](#algorithmidentifierclass),[Encryptor](#encryptorclass)>
+
+---
+
+## Implementation modules
+Implementation modules contain implementation for the [Encryptor](#encryptorclass) or [KeyedHasher](#keyedhasherclass) 
+from the [API MODULE](#api-module) to extend functionality of the [HashingManager](#hashingmanagerclass) or 
+[EncryptionManager](#encryptionmanagerclass) from the [CORE MODULE](#core-module) 
+
+### EncryptorAesGcm.class
+128bit authentication tag and 96bit initial vector with SecureRandom.Cipher instance provided by the `Java Security Provider`.  
+*Install package with maven:*
+```xml
+<dependency>
+    <groupId>dev.ysdaeth.autocrypt</groupId>
+    <artifactId>j-autocrypt-aes-gcm</artifactId>
+    <version>0.1</version>
+</dependency>
+```
+> [!WARNING]
+> Collision chance for random 96bit initial vector is low, but not zero. Remember about the key rotation.
+
+---
+### HasherHMac.class
+With SHA224, SHA256, SHA384, SHA512 accessible with static getter method
+```xml
+<dependency>
+    <groupId>dev.ysdaeth.autocrypt</groupId>
+    <artifactId>j-autocrypt-h-mac-sha</artifactId>
+    <version>0.1</version>
+</dependency>
 ```
 
-#### Decryption
-Decryption detects which algorithm should be used for decryption.
-```
-EncryptionManager manager = new EncryptionManager();
-byte[] encoded = // get encoded bytes
-AlgorithmOutput output = new AlgorithmOutput(encoded); //wrapper for bytes
-SecretKey key = ...; // key used for encryption
-byte[] rawData = manager.decrypt(output, key );
-```
-
-### Hashing manager
-Hashing manager creates encoded bytes that contain algorithm identifier bytes, optional algorithm metadata bytes,
-and main bytes which are actual data hash.
-
-#### Hashing
-Creating encoded bytes with hash, based on the algorithm identifier.
-```
-HashingManager manager = new HashingManager();
-byte[] data = new byte[]{1,2,3};
-SecretKey key = ...;
-Algorithmidentifier identifier = AlgorithmIdentifier.H_MAC_SHA256;
-AlgorithmOutput encoded = manager.hash(secret, key, identifier ); // with a key because HMac needs a key
-```
-
-## Algorithm details
-
-### AES GCM
-AES GCM cipher instance is provided from the `java.security.provider`. When encrypting data, a
-96bits initial vector is generated with Secure random. Authentication tag is 128bits.
-Encoded bytes structure contains algorithm identifier bytes (type and variant), initial vector length in one byte,
-since length can be fir with single byte, initial vector byte array and encrypted bytes with authentication tag.
-```
-encoded = [type],[variant],[ivLen],[iv bytes],[main bytes]
-```
-
-### HMac Sha 224-512
-Hmac Sha instance is provided from the `java.security.provider`. Creates hash of the given message.
-```
-encoded = [type],[variant],[main bytes]
-```
-
-## Other
-### Requirements
+## Requirements
 - Java 25
 - Designed for OpenJDK
 
-### Target list
-- [ ] AES CTR
-- [ ] AES GCM-SIV
+## Target list
+- [x] AES GCM
+- [x] HMac Sha 224
+- [x] HMac Sha 256
+- [x] HMac Sha 384
+- [x] HMac Sha 512
+- [ ] Sha 224
 - [ ] Sha 256
 - [ ] Sha 384
 - [ ] Sha 512
 - [ ] Bcrypt
-- [ ] Argon2id
 - [ ] RSA OAEP
+- [ ] PBKDF2 with HMacSHA256
