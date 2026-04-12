@@ -216,6 +216,17 @@ HMac with SHA224, SHA256, SHA384, SHA512 accessible with static getter method
     <version>0.1</version>
 </dependency>
 ```
+---
+### HasherSha.class
+Hashing without key SHA based.  
+SHA224, SHA256, SHA384, SHA512
+```xml
+<dependency>
+    <groupId>dev.ysdaeth.autocrypt</groupId>
+    <artifactId>j-autocrypt-sha</artifactId>
+    <version>0.1</version>
+</dependency>
+```
 
 ## Requirements
 - Java 25

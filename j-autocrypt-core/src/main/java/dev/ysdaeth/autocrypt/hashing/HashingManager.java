@@ -15,29 +15,52 @@ import java.util.Objects;
 public class HashingManager {
 
     private final CryptographicRegistry<KeyedHasher> keyedHasherRegistry;
+    private final CryptographicRegistry<Hasher> hasherRegistry;
 
-    public HashingManager(CryptographicRegistry<KeyedHasher> keyedHasherRegistry){
+    public HashingManager(
+            CryptographicRegistry<KeyedHasher> keyedHasherRegistry,
+            CryptographicRegistry<Hasher> hasherRegistry){
         this.keyedHasherRegistry = Objects.requireNonNull(keyedHasherRegistry);
+        this.hasherRegistry = hasherRegistry;
     }
 
     /**
-     * Creates a hash of the raw data provided as an argument by using the provided key.
+     * Creates a hash of the data provided as an argument by using the provided key.
      * Hashing function is selected by the provided algorithm identifier. It uses
      * {@link KeyedHasher} for data hashing.
-     * @param raw data to create a hash
+     * @param data data to create a hash
      * @param key key to create a hash
      * @param identifier algorithm of the keyed identifier
      * @return encoded bytes with algorithm identifier, algorithm
-     * @throws RuntimeException when algorithm instance could not be provided by the java security provider
+     * @throws RuntimeException when algorithm instance could not be provided by the security provider
      * @throws KeyException when key does not match the algorithm instance
      * @throws AlgorithmIdentificationException When there is no registered implementation
      * assigned to the {@link AlgorithmIdentifier}
      */
-    public AlgorithmOutput hash(byte[] raw, Key key, AlgorithmIdentifier identifier)
+    public AlgorithmOutput hash(byte[] data, Key key, AlgorithmIdentifier identifier)
             throws KeyException, AlgorithmIdentificationException {
 
         KeyedHasher authenticator = keyedHasherRegistry.getRegistered(identifier);
-        return authenticator.hash(raw,key);
+        return authenticator.hash(data,key);
+    }
+
+    /**
+     * Creates a hash of the data provided as an argument.
+     * Hashing function is selected by the provided algorithm identifier. It uses
+     * {@link Hasher} for data hashing.
+     * @param data data to create a hash
+     * @param identifier algorithm of the keyed identifier
+     * @return encoded bytes with algorithm identifier, algorithm
+     * @throws RuntimeException when algorithm instance could not be provided by the security provider
+     * @throws KeyException when key does not match the algorithm instance
+     * @throws AlgorithmIdentificationException When there is no registered implementation
+     * assigned to the {@link AlgorithmIdentifier}
+     */
+    public AlgorithmOutput hash(byte[] data, AlgorithmIdentifier identifier)
+            throws KeyException, AlgorithmIdentificationException {
+
+        Hasher hasher = hasherRegistry.getRegistered(identifier);
+        return hasher.hash(data);
     }
 
     /**
@@ -59,5 +82,24 @@ public class HashingManager {
         AlgorithmIdentifier identifier = output.getIdentifier();
         KeyedHasher authenticator = keyedHasherRegistry.getRegistered(identifier);
         return authenticator.matches(raw, output, key);
+    }
+
+    /**
+     * Automatically selects algorithm of the {@link Hasher} used for hashing encoded byte array, and
+     * tests if raw data and a key matches the created hash
+     * Returns true if data matches the hash, otherwise false.
+     * @param raw raw data to check
+     * @param output wrapped encoded bytes created by the {@link Hasher}
+     * @return true if hash matches, otherwise false
+     * @throws RuntimeException when algorithm instance could not be provided by the java security provider
+     * @throws AlgorithmIdentificationException when provided encoded bytes does not match
+     * any known algorithm used by the {@link Hasher}
+     */
+    public boolean matches(byte[] raw, AlgorithmOutput output)
+            throws AlgorithmIdentificationException {
+
+        AlgorithmIdentifier identifier = output.getIdentifier();
+        Hasher authenticator = hasherRegistry.getRegistered(identifier);
+        return authenticator.matches(raw, output);
     }
 }

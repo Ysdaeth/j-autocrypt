@@ -36,6 +36,11 @@
             <artifactId>j-autocrypt-h-mac-sha</artifactId>
             <version>0.1</version>
         </dependency>
+        <dependency>
+            <groupId>dev.ysdaeth.autocrypt</groupId>
+            <artifactId>j-autocrypt-sha</artifactId>
+            <version>0.1</version>
+        </dependency>
     </dependencies>
 
     <build>

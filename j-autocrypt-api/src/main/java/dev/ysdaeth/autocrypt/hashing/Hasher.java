@@ -1,7 +1,7 @@
 package dev.ysdaeth.autocrypt.hashing;
 
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
+import dev.ysdaeth.autocrypt.Cryptographic;
 
 /**
  * Interface for data hashing and verification.
@@ -13,7 +13,7 @@ import dev.ysdaeth.autocrypt.AlgorithmOutput;
  *     boolean verified = matches(message, output);
  * </pre></blockquote>
  */
-public interface Hasher {
+public interface Hasher extends Cryptographic {
     /**
      * Create hash based on the provided data
      * @param data data to create hash
@@ -28,10 +28,4 @@ public interface Hasher {
      * @return true if data matches hash, otherwise false.
      */
     boolean matches(byte[] data, AlgorithmOutput output);
-
-    /**
-     * Returns algorithm identifier
-     * @return algorithm identifier
-     */
-    AlgorithmIdentifier getIdentifier();
 }
