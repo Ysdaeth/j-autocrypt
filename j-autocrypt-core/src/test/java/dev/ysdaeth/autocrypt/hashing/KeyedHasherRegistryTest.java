@@ -1,11 +1,6 @@
 package dev.ysdaeth.autocrypt.hashing;
 
-import dev.ysdaeth.autocrypt.AlgorithmIdentificationException;
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
-import dev.ysdaeth.autocrypt.AlgorithmRegistrationException;
-import dev.ysdaeth.autocrypt.hashing.KeyedHasher;
-import dev.ysdaeth.autocrypt.hashing.KeyedHasherRegistry;
+import dev.ysdaeth.autocrypt.*;
 import org.junit.jupiter.api.Test;
 
 import java.security.InvalidKeyException;
@@ -20,7 +15,7 @@ class KeyedHasherRegistryTest {
     @Test
     void register_shouldNotThrowException_whenIdentifierIsUnique(){
         KeyedHasher hasher = new MockedKeyedHasher();
-        KeyedHasherRegistry registry = new KeyedHasherRegistry();
+        CryptographicRegistry<KeyedHasher> registry = new CryptographicRegistry<>();
 
         assertDoesNotThrow(()->registry.register(hasher));
     }
@@ -28,7 +23,7 @@ class KeyedHasherRegistryTest {
     @Test
     void register_shouldThrowException_whenIdentifierIsNotUnique() throws Exception {
         KeyedHasher hasher = new MockedKeyedHasher();
-        KeyedHasherRegistry registry = new KeyedHasherRegistry();
+        CryptographicRegistry<KeyedHasher> registry = new CryptographicRegistry<>();
         registry.register(hasher);
 
         assertThrowsExactly(
@@ -39,7 +34,7 @@ class KeyedHasherRegistryTest {
 
     @Test
     void getRegistered_shouldNotThrowException_whenIdentifierExist() throws Exception {
-        KeyedHasherRegistry registry = new KeyedHasherRegistry();
+        CryptographicRegistry<KeyedHasher> registry = new CryptographicRegistry<>();
         KeyedHasher hasher = new MockedKeyedHasher();
         AlgorithmIdentifier identifier = hasher.getIdentifier();
         registry.register(hasher);
@@ -50,7 +45,7 @@ class KeyedHasherRegistryTest {
     @Test
     void getRegistered_shouldThrowException_whenIdentifierNotRegistered(){
         AlgorithmIdentifier identifier = new AlgorithmIdentifier((byte)2, (byte)2);
-        KeyedHasherRegistry registry = new KeyedHasherRegistry();
+        CryptographicRegistry<KeyedHasher> registry = new CryptographicRegistry<>();
 
         assertThrowsExactly(
                 AlgorithmIdentificationException.class,

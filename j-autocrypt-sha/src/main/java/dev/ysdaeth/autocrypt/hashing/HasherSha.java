@@ -42,6 +42,11 @@ public class HasherSha implements Hasher {
         return Arrays.equals(output.getEncoded(),actual);
     }
 
+    @Override
+    public AlgorithmIdentifier getIdentifier() {
+        return identifier;
+    }
+
     /**
      * Creates instance that perform hashing operations, where encoded bytes contains specified algorithm identifier
      * as the leading bytes.

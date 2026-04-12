@@ -2,6 +2,7 @@ package dev.ysdaeth.autocrypt.hashing;
 
 import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
+import dev.ysdaeth.autocrypt.Cryptographic;
 
 import java.security.Key;
 import java.security.KeyException;
@@ -17,7 +18,7 @@ import java.security.KeyException;
  *     boolean verified = verify(message, output, messageKey);
  * </pre></blockquote>
  */
-public interface KeyedHasher {
+public interface KeyedHasher extends Cryptographic {
 
     /**
      * Returns wrapped encoded bytes array with {@link AlgorithmOutput}.

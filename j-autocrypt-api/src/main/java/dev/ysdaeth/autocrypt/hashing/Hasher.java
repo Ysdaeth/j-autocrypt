@@ -1,5 +1,6 @@
 package dev.ysdaeth.autocrypt.hashing;
 
+import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
 
 /**
@@ -27,4 +28,10 @@ public interface Hasher {
      * @return true if data matches hash, otherwise false.
      */
     boolean matches(byte[] data, AlgorithmOutput output);
+
+    /**
+     * Returns algorithm identifier
+     * @return algorithm identifier
+     */
+    AlgorithmIdentifier getIdentifier();
 }

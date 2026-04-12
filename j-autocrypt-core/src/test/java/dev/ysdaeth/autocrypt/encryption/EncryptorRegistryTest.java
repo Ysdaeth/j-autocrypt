@@ -1,9 +1,6 @@
 package dev.ysdaeth.autocrypt.encryption;
 
-import dev.ysdaeth.autocrypt.AlgorithmIdentificationException;
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
-import dev.ysdaeth.autocrypt.AlgorithmRegistrationException;
+import dev.ysdaeth.autocrypt.*;
 import org.junit.jupiter.api.Test;
 
 import java.security.Key;
@@ -18,7 +15,7 @@ class EncryptorRegistryTest {
     void register_shouldNotThrowException_whenAlgorithmIdentifierIsUnique() {
         Encryptor encryptor = new MockedEncryptor_1();
 
-        EncryptorRegistry registry = new EncryptorRegistry();
+        CryptographicRegistry<Encryptor> registry = new CryptographicRegistry<>();
         assertDoesNotThrow(()->registry.register( encryptor));
     }
 
@@ -28,7 +25,7 @@ class EncryptorRegistryTest {
         Encryptor encryptor = new MockedEncryptor_1();
 
         Encryptor existingEncryptor = new MockedEncryptor_1();
-        EncryptorRegistry registry = new EncryptorRegistry();
+        CryptographicRegistry<Encryptor> registry = new CryptographicRegistry<>();
 
         registry.register(encryptor);
         assertThrowsExactly(
@@ -43,7 +40,7 @@ class EncryptorRegistryTest {
         Encryptor encryptor = new MockedEncryptor_1();
         AlgorithmIdentifier identifier = encryptor.getIdentifier();
 
-        EncryptorRegistry registry = new EncryptorRegistry();
+        CryptographicRegistry<Encryptor> registry = new CryptographicRegistry<>();
         registry.register(encryptor);
 
         assertDoesNotThrow(()-> registry.getRegistered(identifier));
@@ -53,7 +50,7 @@ class EncryptorRegistryTest {
     @Test
     void getRegistered_shouldThrowException_whenThereIsNoRegisteredEncryptor() {
         AlgorithmIdentifier identifier = new AlgorithmIdentifier((byte)1, (byte)1);
-        EncryptorRegistry registry = new EncryptorRegistry();
+        CryptographicRegistry<Encryptor> registry = new CryptographicRegistry<>();
 
         assertThrowsExactly(
                 AlgorithmIdentificationException.class,

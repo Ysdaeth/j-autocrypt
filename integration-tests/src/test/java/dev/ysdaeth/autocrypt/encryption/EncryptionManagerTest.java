@@ -2,6 +2,7 @@ package dev.ysdaeth.autocrypt.encryption;
 
 import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
+import dev.ysdaeth.autocrypt.CryptographicRegistry;
 import dev.ysdaeth.autocrypt.Identifiers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,8 @@ public class EncryptionManagerTest {
     }
 
     static EncryptionManager createManager(){
-        EncryptorRegistry registry = EncryptorRegistry.of( new EncryptorAesGcm(Identifiers.AES_GCM) );
+        CryptographicRegistry<Encryptor> registry1 = new CryptographicRegistry<>();
+        CryptographicRegistry<Encryptor> registry = CryptographicRegistry.of( new EncryptorAesGcm(Identifiers.AES_GCM) );
         return new EncryptionManager(registry);
     }
 }

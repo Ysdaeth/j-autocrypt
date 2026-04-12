@@ -18,13 +18,13 @@ API
     - [AlgorithmOutput](#algorithmoutputclass)
     - [Encryptor](#encryptorclass)
     - [KeyedHasher](#keyedhasherclass)
+    - [Hasher](#hasherclass)
 
 Core
 - [CORE MODULE](#core-module)
     - [HashingManager](#hashingmanagerclass)
-    - [KeyedHasherRegistry](#keyedhasherregistryclass)
     - [EncryptionManager](#encryptionmanagerclass)
-    - [EncryptorRegistry](#encryptorregistryclass)
+    - [CryptographicRegistry](#cryptograhpicregistryclass)
 
 API Implementations
 - Encryption  
@@ -64,15 +64,16 @@ install other dependency.
 
 ---
 ### Register Encryptor
-Now, lets create [EncryptorRegistry](#encryptorregistryclass) and register AES GCM. Registry method
+Now, lets create [Cryptographic registry](#cryptograhpicregistryclass) and register AES GCM. Registry method
 accepts Supplier<[Encryptor](#encryptorclass)>, but to keep example simple, we will pass instance reference to the object 
 and make the registry to wrap it with the supplier internally.   
 We can define own [identifier](#algorithmidentifierclass) that will be used by the encryptor.
 
 ```java
-AlgorithmIdentifier identifierAesGcm = new AlgorithmIdentifier( (byte) 0x01, (byte)0x06 );
+AlgorithmIdentifier identifierAesGcm = new AlgorithmIdentifier( (byte) 0x01, (byte) 0x06 );
 Encryptor aes = new EncryptorAesGcm(identifier);
-EncryptorRegistry registry = new EncryptorRegistry();
+
+CryptographicRegistry<Encryptor> registry = new CryptographicRegistry<>();
 registry.register(aes);
 ```
 > [!TIP]
@@ -82,8 +83,8 @@ registry.register(aes);
 ---
 ### Encryption Manager - encryption
 We already have the EncryptorRegistry, now we can inject it into 
-[EncryptionManager](#encryptionmanagerclass). When encrypting we need to create or use static 
-[AlgorithmIdentifier](#algorithmidentifierclass) to specify which algorithm we want to use.
+[EncryptionManager](#encryptionmanagerclass). When encrypting we need to specify which algorithm we want to use. 
+Encoded bytes contain encrypted bytes, and metadata that allows dynamic decryption.
 
 ```java
 EncryptionManager manager = new EncryptionManager(registry);
@@ -93,7 +94,7 @@ Key secretKey = KeyGenerator.getInstance("AES").generateKey();
 
 AlgorithmOutput output = manager.encrypt(secret, secretKey, identifierAesGcm);
 
-byte[] encodedBytes = output.getEncoded();
+byte[] encodedBytes = output.getEncoded(); // metadata + encrypted bytes.
 ```
 
 ---
@@ -181,9 +182,9 @@ It is responsible for data encryption based on the selected [AlgorithmIdentifier
 automatic algorithm implementation selection for data decryption based on the [bytes encoding](#bytes-encoding)
 
 ---
-### EncryptorRegistry.class
-Encryptor registry stores instances of the [Encryptor](#encryptorclass). 
-It is wrapper class for Map<[AlgorithmIdentifier](#algorithmidentifierclass),[Encryptor](#encryptorclass)>
+### CryptograhpicRegistry.class
+Registry to store cryptographic algorithms that implements [Encryptor](#encryptorclass), [KeyedHasher](#keyedhasherclass), 
+and [Hasher](#hasherclass). Every algorithm implementation is assigned to the unique identifier.
 
 ---
 
@@ -207,7 +208,7 @@ from the [API MODULE](#api-module) to extend functionality of the [HashingManage
 
 ---
 ### HasherHMac.class
-With SHA224, SHA256, SHA384, SHA512 accessible with static getter method
+HMac with SHA224, SHA256, SHA384, SHA512 accessible with static getter method
 ```xml
 <dependency>
     <groupId>dev.ysdaeth.autocrypt</groupId>

@@ -3,6 +3,7 @@ package dev.ysdaeth.autocrypt.hashing;
 import dev.ysdaeth.autocrypt.AlgorithmIdentificationException;
 import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
+import dev.ysdaeth.autocrypt.CryptographicRegistry;
 
 import java.security.Key;
 import java.security.KeyException;
@@ -13,9 +14,9 @@ import java.util.Objects;
  */
 public class HashingManager {
 
-    private final KeyedHasherRegistry keyedHasherRegistry;
+    private final CryptographicRegistry<KeyedHasher> keyedHasherRegistry;
 
-    public HashingManager(KeyedHasherRegistry keyedHasherRegistry){
+    public HashingManager(CryptographicRegistry<KeyedHasher> keyedHasherRegistry){
         this.keyedHasherRegistry = Objects.requireNonNull(keyedHasherRegistry);
     }
 

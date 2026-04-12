@@ -3,11 +3,11 @@ package dev.ysdaeth.autocrypt.encryption;
 import dev.ysdaeth.autocrypt.AlgorithmIdentificationException;
 import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
+import dev.ysdaeth.autocrypt.CryptographicRegistry;
 
 import java.security.Key;
 import java.security.KeyException;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * Encryption manager purpose is to ease data encryption and algorithm detection.
@@ -20,13 +20,11 @@ import java.util.function.Supplier;
  *     SecretKey key = ...;
  *     AlgorithmOutput encoded = manager.encrypt(secret, key, AlgorithmIdentifier.AES_GCM );
  * </pre></blockquote>
- * Class uses {@link EncryptorRegistry#getRegistered(AlgorithmIdentifier)} to provide the encrypting instance.
- * To register custom encryptor use {@link EncryptorRegistry#register(Supplier)}
  */
 public class EncryptionManager {
-    private final EncryptorRegistry registry;
+    private final CryptographicRegistry<Encryptor> registry;
 
-    public EncryptionManager(EncryptorRegistry registry){
+    public EncryptionManager(CryptographicRegistry<Encryptor> registry){
         this.registry = Objects.requireNonNull(registry,"Registry must not be null");
     }
 

@@ -1,7 +1,7 @@
 package dev.ysdaeth.autocrypt.encryption;
 
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
+import dev.ysdaeth.autocrypt.Cryptographic;
 
 import java.security.Key;
 import java.security.KeyException;
@@ -10,7 +10,7 @@ import java.security.KeyException;
  * Encryptor that returns {@link AlgorithmOutput}
  * Metadata bytes are optional and their presence depends on the algorithm implementation
  */
-public interface Encryptor {
+public interface Encryptor extends Cryptographic {
 
     /**
      * Encrypts data and returns encoded bytes and returns {@link AlgorithmOutput}.
@@ -32,6 +32,5 @@ public interface Encryptor {
      * @throws KeyException when key does not match the secret, or not match the algorithm instance.
      */
     byte[] decrypt(AlgorithmOutput encoded, Key key) throws KeyException;
-    AlgorithmIdentifier getIdentifier();
 
 }

@@ -1,7 +1,7 @@
 package dev.ysdaeth.autocrypt;
 
 /**
- * Class representation of the algorithm identifier.
+ * Immutable Class representation of the algorithm identifier.
  * Algorithm identifier contains two bytes, where first byte is the algorithm identifier,
  * and the second byte is algorithm variant.
  * Byte value of 0x00 represents unknown, and must not be used as an algorithm type, or the
