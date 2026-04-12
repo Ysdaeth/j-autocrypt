@@ -7,13 +7,14 @@
   <version>0.1</version>
   <packaging>pom</packaging>
 
-  <name>jautocrypt</name>
+  <name>j-autocrypt-parent</name>
   <modules>
-    <module>api</module>
-    <module>aes-gcm</module>
-    <module>core</module>
+    <module>j-autocrypt-api</module>
+    <module>j-autocrypt-aes-gcm</module>
+    <module>j-autocrypt-core</module>
     <module>integration-tests</module>
-    <module>h-mac-sha</module>
+    <module>j-autocrypt-h-mac-sha</module>
+    <module>j-autocrypt-sha</module>
   </modules>
 
   <properties>

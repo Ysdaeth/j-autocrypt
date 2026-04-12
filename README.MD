@@ -2,6 +2,10 @@
 Encryption and hashing library to automatically handle algorithm resolution, 
 eliminating the need to store algorithm metadata for decryption and hash comparison.
 
+> [!NOTE]
+> GitHub and Maven packages are not available, to use the library, clone the repository and install dependencies locally.
+> Packages downloads will be available after Jun 2026
+
 Main
 - [How to use](#how-to-use)
 - [Bytes encoding](#bytes-encoding)
@@ -23,7 +27,10 @@ Core
     - [EncryptorRegistry](#encryptorregistryclass)
 
 API Implementations
-- [AES GCM]()
+- Encryption  
+  [AES GCM](#encryptoraesgcmclass)
+- Hashing  
+[H Mac](#hasherhmacclass)
 
 ## Bytes encoding
 Encoded bytes are bytes produced by the algorithm and are wrapped by the [AlgorithmOutput](#algorithmoutputclass) class object.
@@ -35,14 +42,11 @@ Encoded bytes are in the following order:
 Metadata bytes are optional and their presence depends on the algorithm implementation.
 
 ## How to use
-> [!NOTE]
-> GitHub and Maven packages are not available, to use library clone repository and install dependencies locally.
-> Packages download will be available after Jun 2026
+We will focus on the Encryption part, but hashing part is almost the same.
 
-### Project object model
-We will focus on the Encryption part, but hashing part is almost the same.  
+### Project object model 
 First, lets install [core](#core-module) package and one of the [Encryptor](#encryptorclass) implementations, 
-in this case we will use [AES GCM](#encryptoraesgcmclass),but you can create your own implementation or 
+in this case we will use [AES GCM](#encryptoraesgcmclass), but you can create your own implementation or 
 install other dependency.
 ```xml
 <dependency>
@@ -60,21 +64,20 @@ install other dependency.
 
 ---
 ### Register Encryptor
-Now, lets create [EncryptorRegistry](#encryptorregistryclass) and register AES GCM encryptor. Registry method
-accepts Supplier<[Encryptor](#encryptorclass)>, but to keep example simple, we will pass instance reference
-as an argument and make the registry to wrap it with the supplier internally.
+Now, lets create [EncryptorRegistry](#encryptorregistryclass) and register AES GCM. Registry method
+accepts Supplier<[Encryptor](#encryptorclass)>, but to keep example simple, we will pass instance reference to the object 
+and make the registry to wrap it with the supplier internally.   
+We can define own [identifier](#algorithmidentifierclass) that will be used by the encryptor.
+
 ```java
-Encryptor aes = new EncryptorAesGcm();
+AlgorithmIdentifier identifierAesGcm = new AlgorithmIdentifier( (byte) 0x01, (byte)0x06 );
+Encryptor aes = new EncryptorAesGcm(identifier);
 EncryptorRegistry registry = new EncryptorRegistry();
 registry.register(aes);
 ```
 > [!TIP]
-> You can achieve the same effect with static method and multiple lambdas
-```java
-EncryptorRegistry registry = EncryptorRegistry.of(
-        EncryptorAesGcm::new, other1::new, other2::new, ...
-);
-```
+> Algorithm identifier first byte should be the algorithm type, second byte the algorithm variant.
+> You can create own identifiers, but take a look at [Proposed identifiers](docs/IDENTIFIERS.md)
 
 ---
 ### Encryption Manager - encryption
@@ -88,8 +91,7 @@ EncryptionManager manager = new EncryptionManager(registry);
 byte[] secret = "secret".getBytes();
 Key secretKey = KeyGenerator.getInstance("AES").generateKey();
 
-AlgorithmIdentifier identifier = AlgorithmIdentifier.AES_GCM;
-AlgorithmOutput output = manager.encrypt(secret, secretKey, identifier);
+AlgorithmOutput output = manager.encrypt(secret, secretKey, identifierAesGcm);
 
 byte[] encodedBytes = output.getEncoded();
 ```
@@ -121,7 +123,7 @@ the [EncryptionManager](#encryptionmanagerclass) and [HashingManager](#hashingma
 ```
 ### AlgorithmIdentifier.class
 Algorithm identifier represents the bytes pair to identify the algorithm instance.
-First byte is for algorithm type identification, for example 'AES', and second byte is algorithm variant like 'GCM'.
+First byte is for algorithm type, for example 'AES', and second byte is algorithm variant like 'GCM'.
 
 ---
 ### AlgorithmOutput.class
@@ -152,10 +154,10 @@ and hash itself.
 Core module contains hashing and encryption managers which are core of the library. These components
 are responsible for dynamic selection of the cryptographic algorithm implementations to produce 
 [AlgorithmOutput](#algorithmoutputclass).  
-When performing encryption or hashing, you must provide the  [AlgorithmIdentifier](#algorithmoutputclass) and data to perform
+When performing encryption or hashing, you must provide the [AlgorithmIdentifier](#algorithmoutputclass) and data to perform
 cryptographic operation.   
 For decryption or hash verification the algorithm identifier is resolved from the encoded bytes, and proper 
-algorithm implementation is provided.
+algorithm implementation is provided.  
 *Install CORE package with maven:*
 ```xml
 <dependency>
@@ -170,8 +172,8 @@ algorithm implementation selection for the hash verification based on the [bytes
 
 ---
 ### KeyedHasherRegistry.class
-Keyed hasher registry stores instances of the [KeyedHasher](#keyedhasherclass)
-It is wrapper class for Map<[AlgorithmIdentifier](#algorithmidentifierclass),[KeyedHasher](#keyedhasherclass)>
+Keyed hasher registry stores instances of the [KeyedHasher](#keyedhasherclass).
+It is wrapper class for the Map< [AlgorithmIdentifier](#algorithmidentifierclass), [KeyedHasher](#keyedhasherclass) >
 
 ---
 ### EncryptionManager.class
@@ -224,10 +226,11 @@ With SHA224, SHA256, SHA384, SHA512 accessible with static getter method
 - [x] HMac Sha 256
 - [x] HMac Sha 384
 - [x] HMac Sha 512
-- [ ] Sha 224
-- [ ] Sha 256
-- [ ] Sha 384
-- [ ] Sha 512
+- [x] Sha 224
+- [x] Sha 256
+- [x] Sha 384
+- [x] Sha 512
 - [ ] Bcrypt
 - [ ] RSA OAEP
-- [ ] PBKDF2 with HMacSHA256
+  
+New target list will be released after this one is completed
