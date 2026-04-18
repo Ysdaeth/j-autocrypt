@@ -1,4 +1,4 @@
-package dev.ysdaeth.autocrypt.hashing;
+package dev.ysdaeth.autocrypt;
 
 import dev.ysdaeth.autocrypt.*;
 import org.junit.jupiter.api.Test;
@@ -57,12 +57,12 @@ class KeyedHasherRegistryTest {
     private static final class MockedKeyedHasher implements KeyedHasher {
 
         @Override
-        public AlgorithmOutput hash(byte[] message, Key key) throws KeyException {
+        public AlgorithmOutput hash(byte[] data, Key key) throws KeyException {
             return null;
         }
 
         @Override
-        public boolean matches(byte[] message, AlgorithmOutput output, Key key) throws InvalidKeyException {
+        public boolean matches(byte[] data, AlgorithmOutput output, Key key) throws InvalidKeyException {
             return false;
         }
 

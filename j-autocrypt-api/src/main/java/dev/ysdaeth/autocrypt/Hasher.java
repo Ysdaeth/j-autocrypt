@@ -1,7 +1,4 @@
-package dev.ysdaeth.autocrypt.hashing;
-
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
-import dev.ysdaeth.autocrypt.Cryptographic;
+package dev.ysdaeth.autocrypt;
 
 /**
  * Interface for data hashing and verification.

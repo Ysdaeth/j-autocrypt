@@ -1,7 +1,4 @@
-package dev.ysdaeth.autocrypt.encryption;
-
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
-import dev.ysdaeth.autocrypt.Cryptographic;
+package dev.ysdaeth.autocrypt;
 
 import java.security.Key;
 import java.security.KeyException;

@@ -1,16 +1,14 @@
-package dev.ysdaeth.autocrypt.hashing;
-
-import dev.ysdaeth.autocrypt.AlgorithmIdentificationException;
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
-import dev.ysdaeth.autocrypt.CryptographicRegistry;
+package dev.ysdaeth.autocrypt;
 
 import java.security.Key;
 import java.security.KeyException;
 import java.util.Objects;
 
 /**
- * Creates hashes of the raw input data, or data and a key.
+ * Creates hashes of the raw input data, or data and a key. It uses {@link CryptographicRegistry}
+ * to provide {@link Hasher} and {@link KeyedHasher} implementations. Hashing operation requires algorithm
+ * identifier that was assigned to the hashing algorithm, but hash comparison manages
+ * to resolve used algorithm without specifying it.
  */
 public class HashingManager {
 
@@ -25,9 +23,9 @@ public class HashingManager {
     }
 
     /**
-     * Creates a hash of the data provided as an argument by using the provided key.
-     * Hashing function is selected by the provided algorithm identifier. It uses
-     * {@link KeyedHasher} for data hashing.
+     * Creates a hash of the data with the passed key.
+     * Hashing function is selected by the provided algorithm identifier. It uses the
+     * {@link CryptographicRegistry<KeyedHasher>} for the data hashing.
      * @param data data to create a hash
      * @param key key to create a hash
      * @param identifier algorithm of the keyed identifier
@@ -46,8 +44,8 @@ public class HashingManager {
 
     /**
      * Creates a hash of the data provided as an argument.
-     * Hashing function is selected by the provided algorithm identifier. It uses
-     * {@link Hasher} for data hashing.
+     * Hashing function is selected by the provided algorithm identifier. It uses the
+     * {@link CryptographicRegistry<Hasher>} for the data hashing.
      * @param data data to create a hash
      * @param identifier algorithm of the keyed identifier
      * @return encoded bytes with algorithm identifier, algorithm
@@ -64,17 +62,16 @@ public class HashingManager {
     }
 
     /**
-     * Automatically selects algorithm of the {@link KeyedHasher} used for hashing encoded byte array, and
-     * tests if raw data and a key matches the created hash
+     * Automatically selects the algorithm implementation from the {@link CryptographicRegistry<KeyedHasher>}
+     * used for the hashing and tests if raw data and a key matches the created hash
      * Returns true if data matches the hash, otherwise false.
      * @param raw raw data to check
      * @param output wrapped encoded bytes created by the {@link KeyedHasher}
      * @param key key used for hashing encoded bytes
      * @return true if hash matches, otherwise false
-     * @throws RuntimeException when algorithm instance could not be provided by the java security provider
-     * @throws AlgorithmIdentificationException when provided encoded bytes does not match
-     * @throws KeyException when key is in illegal state like, not initialized, not match the algorithm, etc.
-     * any known algorithm used by the {@link KeyedHasher}
+     * @throws AlgorithmIdentificationException when provided encoded bytes does not match any
+     * known algorithm implementation in the {@link CryptographicRegistry<KeyedHasher>}.
+     * @throws KeyException when key is in illegal state like not initialized, not match the algorithm, etc.
      */
     public boolean matches(byte[] raw, AlgorithmOutput output, Key key)
             throws AlgorithmIdentificationException, KeyException {
@@ -85,21 +82,21 @@ public class HashingManager {
     }
 
     /**
-     * Automatically selects algorithm of the {@link Hasher} used for hashing encoded byte array, and
-     * tests if raw data and a key matches the created hash
+     * Automatically selects the algorithm implementation from the {@link CryptographicRegistry<Hasher>}
+     * which was used for the data hashing and tests if the data and a key matches the created hash
      * Returns true if data matches the hash, otherwise false.
-     * @param raw raw data to check
-     * @param output wrapped encoded bytes created by the {@link Hasher}
+     * @param data data to check
+     * @param encoded wrapped encoded bytes created by the {@link Hasher}
      * @return true if hash matches, otherwise false
      * @throws RuntimeException when algorithm instance could not be provided by the java security provider
      * @throws AlgorithmIdentificationException when provided encoded bytes does not match
      * any known algorithm used by the {@link Hasher}
      */
-    public boolean matches(byte[] raw, AlgorithmOutput output)
+    public boolean matches(byte[] data, AlgorithmOutput encoded)
             throws AlgorithmIdentificationException {
 
-        AlgorithmIdentifier identifier = output.getIdentifier();
+        AlgorithmIdentifier identifier = encoded.getIdentifier();
         Hasher authenticator = hasherRegistry.getRegistered(identifier);
-        return authenticator.matches(raw, output);
+        return authenticator.matches(data, encoded);
     }
 }

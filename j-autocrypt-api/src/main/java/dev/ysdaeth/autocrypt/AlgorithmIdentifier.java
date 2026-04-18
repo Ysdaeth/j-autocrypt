@@ -9,7 +9,7 @@ package dev.ysdaeth.autocrypt;
  * <p>Example</p>
  * Algorithm type: AES, Algorithm variant: GCM
  */
-public class AlgorithmIdentifier {
+public final class AlgorithmIdentifier {
 
     private final byte type;
     private final byte variant;

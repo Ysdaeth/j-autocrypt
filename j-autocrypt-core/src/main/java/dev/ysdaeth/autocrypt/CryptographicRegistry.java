@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
- * Registry to store algorithm implementations like {@link dev.ysdaeth.autocrypt.encryption.Encryptor},
- * {@link dev.ysdaeth.autocrypt.hashing.KeyedHasher} and {@link dev.ysdaeth.autocrypt.hashing.Hasher} which are assigned
+ * Registry to store algorithm implementations like {@link Encryptor},
+ * {@link KeyedHasher} and {@link Hasher} which are assigned
  * to the {@link AlgorithmIdentifier}
  * @param <T> type of cryptographic algorithm
  */
@@ -62,26 +62,27 @@ public class CryptographicRegistry<T extends Cryptographic> {
     }
 
     /**
-     * Returns new instance with registered hashers passed as an arguments
-     * @param hashers hashers to register
-     * @return registry with registered hashers
+     * Creates a new instance of the registry with registered algorithms that were
+     * passed as an arguments
+     * @param algorithms algorithms to register
+     * @return registry instance with registered algorithms
      */
-    public static <T extends Cryptographic> CryptographicRegistry<T> of(T...hashers){
+    public static <T extends Cryptographic> CryptographicRegistry<T> of(T...algorithms){
         CryptographicRegistry<T> registry = new CryptographicRegistry<>();
-        for(T encryptor: hashers) registry.register(encryptor);
+        for(T encryptor: algorithms) registry.register(encryptor);
         return registry;
     }
 
 
     /**
-     * Returns new instance with registered hashers passed as an arguments
-     * @param hasherSuppliers hashers to register
-     * @return registry with registered hashers
+     * Creates a new instance of the registry with registered algorithms passed as an arguments
+     * @param algorithmSuppliers algorithms to register
+     * @return registry instance with registered hashers
      */
     @SafeVarargs
-    public static <T extends Cryptographic> CryptographicRegistry<T> of(Supplier<T> ...hasherSuppliers){
+    public static <T extends Cryptographic> CryptographicRegistry<T> of(Supplier<T> ...algorithmSuppliers){
         CryptographicRegistry<T> registry = new CryptographicRegistry<>();
-        for(Supplier<T> supplier: hasherSuppliers) registry.register(supplier);
+        for(Supplier<T> supplier: algorithmSuppliers) registry.register(supplier);
         return registry;
     }
 

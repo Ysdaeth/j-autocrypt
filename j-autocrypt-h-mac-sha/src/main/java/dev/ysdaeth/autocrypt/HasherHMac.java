@@ -1,7 +1,4 @@
-package dev.ysdaeth.autocrypt.hashing;
-
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
+package dev.ysdaeth.autocrypt;
 
 import javax.crypto.Mac;
 import java.nio.ByteBuffer;
@@ -21,13 +18,13 @@ public class HasherHMac implements KeyedHasher {
     /**
      * Creates keyed hash for message. Output contains {@link AlgorithmIdentifier} as leading bytes,
      * and hash bytes contains
-     * @param message data to create sign for.
+     * @param data data to create sign for.
      * @param key key used for creating the sign.
      * @return encoded bytes with metadata and hash
      * @throws KeyException when key is not initialized, does not match the algorithm, etc.
      */
     @Override
-    public AlgorithmOutput hash(byte[] message, Key key) throws KeyException {
+    public AlgorithmOutput hash(byte[] data, Key key) throws KeyException {
         Mac mac;
         try{
             mac = Mac.getInstance(instance);
@@ -38,26 +35,26 @@ public class HasherHMac implements KeyedHasher {
         byte[] encoded = ByteBuffer.allocate(mac.getMacLength()+2) // + 2 bytes for type and variant
                 .put(identifier.type())
                 .put(identifier.variant())
-                .put(mac.doFinal(message))
+                .put(mac.doFinal(data))
                 .array();
 
         return new AlgorithmOutput(encoded);
     }
 
     /**
-     * Tests if message matches the algorithm output bytes.
-     * @param message message to create hash
-     * @param output hash to compare.
+     * Tests if data matches the algorithm encoded bytes.
+     * @param data data to create the hash
+     * @param encoded hash to compare.
      * @param key key for the verification
      * @return true if matches, or false when does not match
      * @throws KeyException When key is not initialized, does not match the algorithm, etc.
      */
     @Override
-    public boolean matches(byte[] message, AlgorithmOutput output, Key key) throws KeyException {
-        boolean identifierMatches = identifier.equals(output.getIdentifier());
+    public boolean matches(byte[] data, AlgorithmOutput encoded, Key key) throws KeyException {
+        boolean identifierMatches = identifier.equals(encoded.getIdentifier());
         if(!identifierMatches) return false;
-        AlgorithmOutput actual = hash(message,key);
-        return actual.equals(output);
+        AlgorithmOutput actual = hash(data,key);
+        return actual.equals(encoded);
     }
 
 

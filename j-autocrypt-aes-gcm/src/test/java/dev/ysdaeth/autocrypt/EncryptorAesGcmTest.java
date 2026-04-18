@@ -1,7 +1,5 @@
-package dev.ysdaeth.autocrypt.encryption;
+package dev.ysdaeth.autocrypt;
 
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
 import io.github.ysdaeth.utils.array.ArrayMatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

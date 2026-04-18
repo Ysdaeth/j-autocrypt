@@ -1,7 +1,8 @@
-package dev.ysdaeth.autocrypt.encryption;
+package dev.ysdaeth.autocrypt;
 
 import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
 import dev.ysdaeth.autocrypt.AlgorithmOutput;
+import dev.ysdaeth.autocrypt.Encryptor;
 
 import javax.crypto.AEADBadTagException;
 import javax.crypto.Cipher;

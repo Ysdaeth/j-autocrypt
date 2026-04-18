@@ -1,7 +1,4 @@
-package dev.ysdaeth.autocrypt.hashing;
-
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
+package dev.ysdaeth.autocrypt;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -48,7 +45,7 @@ public class HasherSha implements Hasher {
     }
 
     /**
-     * Creates instance that perform hashing operations, where encoded bytes contains specified algorithm identifier
+     * Creates instance that performs hashing operations, where encoded bytes contains specified algorithm identifier
      * as the leading bytes.
      * @param identifier identifier bytes to include into bytes
      * @return hasher instance
@@ -58,7 +55,7 @@ public class HasherSha implements Hasher {
     }
 
     /**
-     * Creates instance that perform hashing operations, where encoded bytes contains specified algorithm identifier
+     * Creates instance that performs hashing operations, where encoded bytes contains specified algorithm identifier
      * as the leading bytes.
      * @param identifier identifier bytes to include into bytes
      * @return hasher instance
@@ -68,7 +65,7 @@ public class HasherSha implements Hasher {
     }
 
     /**
-     * Creates instance that perform hashing operations, where encoded bytes contains specified algorithm identifier
+     * Creates instance that performs hashing operations, where encoded bytes contains specified algorithm identifier
      * as the leading bytes.
      * @param identifier identifier bytes to include into bytes
      * @return hasher instance
@@ -78,7 +75,7 @@ public class HasherSha implements Hasher {
     }
 
     /**
-     * Creates instance that perform hashing operations, where encoded bytes contains specified algorithm identifier
+     * Creates instance that performs hashing operations, where encoded bytes contains specified algorithm identifier
      * as the leading bytes.
      * @param identifier identifier bytes to include into bytes
      * @return hasher instance

@@ -1,4 +1,4 @@
-package dev.ysdaeth.autocrypt.encryption;
+package dev.ysdaeth.autocrypt;
 
 import dev.ysdaeth.autocrypt.*;
 import org.junit.jupiter.api.Test;

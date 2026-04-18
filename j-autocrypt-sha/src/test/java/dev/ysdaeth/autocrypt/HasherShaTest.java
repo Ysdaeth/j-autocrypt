@@ -1,6 +1,5 @@
 package dev.ysdaeth.autocrypt;
 
-import dev.ysdaeth.autocrypt.hashing.HasherSha;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
