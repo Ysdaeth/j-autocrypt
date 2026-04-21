@@ -63,6 +63,10 @@ public final class AlgorithmIdentifier {
         return variant;
     }
 
+    public byte[] bytes(){
+        return new byte[]{type, variant};
+    }
+
     @Override
     public boolean equals(Object other){
         if(other == null) return false;
@@ -76,6 +80,7 @@ public final class AlgorithmIdentifier {
     public String toString(){
         return String.format("[type = %d, variant = %d]", type, variant);
     }
+
     @Override
     public int hashCode(){
         return type * 256 + variant;
