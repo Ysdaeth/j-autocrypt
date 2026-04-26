@@ -48,7 +48,7 @@ Variant byte range 0x01 to 0xFF
 | Hmac SHA3-224 | 0x80        | 0x07           |
 | Hmac SHA3-256 | 0x80        | 0x08           |
 | Hmac SHA3-384 | 0x80        | 0x09           |
-| Hmac SHA3-512 | 0x80        | 0x10           |
+| Hmac SHA3-512 | 0x80        | 0x0A           |
 
 ### SHA
 | Name     | Type (byte) | Variant (byte) |  
