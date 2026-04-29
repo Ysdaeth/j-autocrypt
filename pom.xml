@@ -16,6 +16,7 @@
     <module>integration-tests</module>
     <module>j-autocrypt-h-mac-sha</module>
     <module>j-autocrypt-sha</module>
+      <module>j-autocrypt-argon2</module>
   </modules>
 
   <properties>
