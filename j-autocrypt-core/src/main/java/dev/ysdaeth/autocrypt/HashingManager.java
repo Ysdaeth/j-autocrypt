@@ -50,12 +50,11 @@ public class HashingManager {
      * @param identifier algorithm of the keyed identifier
      * @return encoded bytes with algorithm identifier, algorithm
      * @throws RuntimeException when algorithm instance could not be provided by the security provider
-     * @throws KeyException when key does not match the algorithm instance
      * @throws AlgorithmIdentificationException When there is no registered implementation
      * assigned to the {@link AlgorithmIdentifier}
      */
     public AlgorithmOutput hash(byte[] data, AlgorithmIdentifier identifier)
-            throws KeyException, AlgorithmIdentificationException {
+            throws AlgorithmIdentificationException {
 
         Hasher hasher = hasherRegistry.getRegistered(identifier);
         return hasher.hash(data);
