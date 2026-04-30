@@ -16,6 +16,7 @@
     <module>integration-tests</module>
     <module>j-autocrypt-h-mac-sha</module>
     <module>j-autocrypt-sha</module>
+      <module>j-autocrypt-argon2</module>
   </modules>
 
   <properties>
@@ -39,6 +40,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.github.ysdaeth</groupId>
+      <artifactId>java-common-utils</artifactId>
+      <version>1.1.0</version>
       <scope>test</scope>
     </dependency>
 
