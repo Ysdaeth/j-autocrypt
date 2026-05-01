@@ -112,7 +112,8 @@ AlgorithmOutput output = new AlgorithmOutput( encodedBytes );
 byte[] decrypted = manager.decrypt(output, secretKey);
 ```
 > [!NOTE]  
-> In this example we don't need to specify the AlgorithmIdentifier because it is already computed in our encoded bytes 
+> In this example we don't need to specify the AlgorithmIdentifier because it is already computed in our encoded bytes, 
+> along with metadata like the initial vector. 
 
 ---
 
