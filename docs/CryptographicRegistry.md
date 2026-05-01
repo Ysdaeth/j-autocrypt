@@ -1,7 +1,7 @@
 # CryptographicRegistry 
 `core module`   
 
-Cryptographic registry is a class that stores and provides implementation of the
+Cryptographic registry is a class that stores and provides implementations of the
 cryptographic algorithms like [KeyedHasher](KeyedHasher.md),  [Hasher](Hasher.md), [Encryptor](Encryptor.md) or any other
 interface that extends [Cryptographic](Cryptographic.md) interface.
 
@@ -38,8 +38,10 @@ CryptographicRegistry<Hasher> hasherRegistry = CryptographicRegistry.of(
 It is also possible to call a method, that receives single Cryptographic object.
 ```java
 hasherRegistry.register( new MyHasher() );
-hasherRegistry.register( ()-> new MyHasher() );
+hasherRegistry.register( ()-> new MyHasher2() );
 ```
+> [!WARNING]
+> Every Cryptographic implementation must have unique identifier, it will be explained later, now just keep that in mind
 
 #### What is the difference
 Difference is that when we use instance, the same instance is being used for every encryption, hashing, etc. 
