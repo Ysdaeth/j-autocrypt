@@ -13,22 +13,22 @@ byte gmc = ox06;
 
 AlgorithmIdentifier aesGcmId = new AlgorithmIdentifier(aes, gcm);
 ```
-
 Now we can use it to identify the algorithms.
-
-
-> [!NOTE]
-> It is possible to use own AlgorithmIdentifier bytes, tables below are only suggestions, not a requirement.
 
 > [!WARNING]
 > Byte 0x00 is considered to be undefined and must not be used as an algorithm identifier  
 > type or variant
 
-## Encryptors (0x01 to 0x7F)
+## Proposed identifier bytes
+
+> [!NOTE]
+> It is possible to use own AlgorithmIdentifier bytes, tables below are only suggestions, not a requirement.
+
+### Encryptors (0x01 to 0x7F)
 Encryptor algorithm type byte should be in range 0x01 to 0x07F (inclusive).
 Variant byte range 0x01 to 0xFF
 
-### AES
+#### AES
 | Name    | Type (byte) | Variant (byte) |  
 |---------|-------------|----------------|
 | AES ECB | 0x01        | 0x01           |
@@ -38,7 +38,7 @@ Variant byte range 0x01 to 0xFF
 | AES CTR | 0x01        | 0x05           |
 | AES GCM | 0x01        | 0x06           |
 
-### RSA
+#### RSA
 | Name          | Type (byte) | Variant (byte) |  
 |---------------|-------------|----------------|
 | RSA NoPadding | 0x02        | 0x01           |
@@ -47,11 +47,11 @@ Variant byte range 0x01 to 0xFF
 | RSASSA PSS    | 0x02        | 0x04           |
 | RSASA PKCS1   | 0x02        | 0x05           |
 
-## Hashers (0x80 to 0xFF)
+### Hashers (0x80 to 0xFF)
 Hasher algorithm type byte should be in range 0x80 to 0xFF (inclusive)
 Variant byte range 0x01 to 0xFF
 
-### HMac
+#### HMac
 | Name          | Type (byte) | Variant (byte) |  
 |---------------|-------------|----------------|
 | HMac MD5      | 0x80        | 0x01           |
@@ -65,7 +65,7 @@ Variant byte range 0x01 to 0xFF
 | Hmac SHA3-384 | 0x80        | 0x09           |
 | Hmac SHA3-512 | 0x80        | 0x0A           |
 
-### SHA
+#### SHA
 | Name     | Type (byte) | Variant (byte) |  
 |----------|-------------|----------------|
 | SHA1     | 0x81        | 0x01           |
@@ -78,7 +78,7 @@ Variant byte range 0x01 to 0xFF
 | SHA3-384 | 0x81        | 0x08           |
 | SHA3-512 | 0x81        | 0x09           |
 
-### Argon2
+#### Argon2
 | Name     | Type (byte) | Variant (byte) |  
 |----------|-------------|----------------|
 | Argon2d  | 0x82        | 0x01           |
