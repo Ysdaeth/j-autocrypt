@@ -1,9 +1,9 @@
 # Encryptor
 `API MODULE` 
 
-Role of the encryptor is data encryption with a secret key. It follows the [AlgorithmIdentifier](AlgorithmIdentifier.md) 
-to ease algorithm identification and automate algorithm selection based on the identification bytes and to store 
-all necessary metadata to decrypt encrypted data.
+Role of the encryptor is data encryption with a cryptographic key. It follows the [AlgorithmOutput](AlgorithmOutput.md)
+pattern to automate algorithm selection based on the identification bytes, and to store
+all necessary metadata that allows data decryption.
 
 ```java
 public interface Encryptor extends Cryptographic {
@@ -12,5 +12,5 @@ public interface Encryptor extends Cryptographic {
 }
 ```
 
-Encryptor extends [Cryptographic](Cryptographic.md) interface to make it possible for Encryptor implementations
+Extends [Cryptographic](Cryptographic.md) interface to make it possible for Hasher implementations
 to be grouped and return it's [AlgorithmIdentifier](AlgorithmIdentifier.md)
