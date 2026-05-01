@@ -1,4 +1,6 @@
-# Identifiers bytes convention
+# AlgorithmIdentifier
+`API MODULE`
+
 Algorithm identifiers require two bytes, where first byte is the algorithm
 type, like AES, RSA, HMAC, etc. second byte is algorithm variant like: GCM, OAEP, SHA256(for HMac).
 > [!NOTE]

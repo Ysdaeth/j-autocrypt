@@ -1,5 +1,5 @@
 # CryptographicRegistry 
-`core module`   
+`CORE MODULE`   
 
 Cryptographic registry is a class that stores and provides implementations of the
 cryptographic algorithms like [KeyedHasher](KeyedHasher.md),  [Hasher](Hasher.md), [Encryptor](Encryptor.md) or any other
@@ -50,9 +50,9 @@ for instance, when constructor is heavy. Suppliers are useful when implementatio
 before any cryptographic operation.
 
 ### Get registered
-One thing that was skipped to simplify, is importance of the [AlgorithmIdentifier](IDENTIFIERS.md) class. 
+One thing that was skipped to simplify, is importance of the [AlgorithmIdentifier](AlgorithmIdentifier.md) class. 
 Every Cryptographic algorithm must have an identification bytes, those bytes may be any bytes you like (expect 0x00 bytes),
-but I use these [identifiers](IDENTIFIERS.md).
+but I use these [identifiers](AlgorithmIdentifier.md).
 
 Every Cryptographic class must return its identifier.
 ```java

@@ -79,7 +79,7 @@ registry.register(aes);
 ```
 > [!TIP]
 > Algorithm identifier first byte should be the algorithm type, second byte the algorithm variant.
-> You can create own identifiers, but take a look at [Proposed identifiers](docs/IDENTIFIERS.md)
+> You can create own identifiers, but take a look at [Proposed identifiers](docs/AlgorithmIdentifier.md)
 
 ---
 ### Encryption Manager - encryption
