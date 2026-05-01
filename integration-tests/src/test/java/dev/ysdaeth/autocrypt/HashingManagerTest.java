@@ -24,14 +24,18 @@ public class HashingManagerTest {
                 HasherSha.sha256(Identifiers.SHA256),
                 HasherSha.sha384(Identifiers.SHA384),
                 HasherSha.sha512(Identifiers.SHA512),
-                HasherArgon2.argon2id(Identifiers.ARGON2ID, 2, 1, 66536, 32)
+                HasherArgon2.argon2i(Identifiers.ARGON2I, 2, 1, 66536, 64),
+                HasherArgon2.argon2d(Identifiers.ARGON2D, 2, 1, 66536, 64),
+                HasherArgon2.argon2id(Identifiers.ARGON2ID, 2, 1, 66536, 64)
         );
         manager = new HashingManager(keyedHasherRegistry, hasherRegistry);
     }
 
     static Stream<AlgorithmIdentifier> nonKeyedHasherIdentifiers(){
         return Stream.of(
-                Identifiers.SHA224, Identifiers.SHA256, Identifiers.SHA384, Identifiers.SHA512
+                Identifiers.SHA224, Identifiers.SHA256, Identifiers.SHA384,
+                Identifiers.SHA512, Identifiers.ARGON2D, Identifiers.ARGON2I,
+                Identifiers.ARGON2ID
         );
     }
     static Stream<AlgorithmIdentifier> keyedHasherIdentifiers() throws Exception{

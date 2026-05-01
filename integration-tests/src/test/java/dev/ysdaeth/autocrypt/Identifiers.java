@@ -17,6 +17,8 @@ public class Identifiers {
     public static final AlgorithmIdentifier SHA256 = new AlgorithmIdentifier((byte)0x81,(byte)0x03);
     public static final AlgorithmIdentifier SHA384 = new AlgorithmIdentifier((byte)0x81,(byte)0x04);
     public static final AlgorithmIdentifier SHA512 = new AlgorithmIdentifier((byte)0x81,(byte)0x05);
+    public static final AlgorithmIdentifier ARGON2D = new AlgorithmIdentifier((byte)0x82, (byte)0x01);
+    public static final AlgorithmIdentifier ARGON2I = new AlgorithmIdentifier((byte)0x82, (byte)0x02);
     public static final AlgorithmIdentifier ARGON2ID = new AlgorithmIdentifier((byte)0x82, (byte)0x03);
 
     /**

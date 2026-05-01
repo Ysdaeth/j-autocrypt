@@ -33,7 +33,7 @@ class HasherArgon2Test {
     }
 
     @Test
-    void matches_shouldReturnTrue_whenPropertiesChange(){
+    void matches_shouldReturnTrue_whenPropertiesChange_forArgon2id(){
         AlgorithmIdentifier identifier = new AlgorithmIdentifier((byte)0x01,(byte) 0x01);
 
         HasherArgon2 hasher = HasherArgon2.argon2id(identifier, 2, 1, 66536, 32);
@@ -46,11 +46,41 @@ class HasherArgon2Test {
         Assertions.assertTrue(matches, "Matches should return true when properties change");
     }
 
+    @Test
+    void matches_shouldReturnTrue_whenPropertiesChange_forArgon2i(){
+        AlgorithmIdentifier identifier = new AlgorithmIdentifier((byte)0x01,(byte) 0x01);
+
+        HasherArgon2 hasher = HasherArgon2.argon2i(identifier, 2, 1, 66536, 32);
+        HasherArgon2 verifier = HasherArgon2.argon2i(identifier, 2, 1, 66536>>>1, 16);
+
+        byte[] password = "password".getBytes(StandardCharsets.UTF_8);
+        AlgorithmOutput output =  hasher.hash(password);
+
+        boolean matches = verifier.matches(password,output);
+        Assertions.assertTrue(matches, "Matches should return true when properties change");
+    }
+
+    @Test
+    void matches_shouldReturnTrue_whenPropertiesChange_forArgon2d(){
+        AlgorithmIdentifier identifier = new AlgorithmIdentifier((byte)0x01,(byte) 0x01);
+
+        HasherArgon2 hasher = HasherArgon2.argon2d(identifier, 2, 1, 66536, 32);
+        HasherArgon2 verifier = HasherArgon2.argon2d(identifier, 2, 1, 66536>>>1, 16);
+
+        byte[] password = "password".getBytes(StandardCharsets.UTF_8);
+        AlgorithmOutput output =  hasher.hash(password);
+
+        boolean matches = verifier.matches(password,output);
+        Assertions.assertTrue(matches, "Matches should return true when properties change");
+    }
+
 
     static Stream<HasherArgon2> argonProvider(){
         AlgorithmIdentifier identifier = new AlgorithmIdentifier((byte)0x01, (byte) 0x01);
         return Stream.of(
-                HasherArgon2.argon2id(identifier, 2, 1, 66536, 32)
+                HasherArgon2.argon2id(identifier, 2, 1, 66536, 32),
+                HasherArgon2.argon2i(identifier, 2, 1, 66536, 32),
+                HasherArgon2.argon2d(identifier, 2, 1, 66536, 32)
         );
     }
 
