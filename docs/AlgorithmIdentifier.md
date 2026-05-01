@@ -3,9 +3,22 @@
 
 Algorithm identifiers require two bytes, where first byte is the algorithm
 type, like AES, RSA, HMAC, etc. second byte is algorithm variant like: GCM, OAEP, SHA256(for HMac).
+
+Creating AlgorithmIdentifier is simple. First byte is meant to be algorithm type byte, and second is to be 
+algorithm variant byte. Let's create algorithm identifier for AES GCM
+
+```java
+byte aes = 0x01;
+byte gmc = ox06;
+
+AlgorithmIdentifier aesGcmId = new AlgorithmIdentifier(aes, gcm);
+```
+
+Now we can use it to identify the algorithms.
+
+
 > [!NOTE]
-> It is possible to use own AlgorithmIdentifier bytes, tables below are only suggestions, not a requirement,
-> that's the reason why it was removed from the API module as static variables.
+> It is possible to use own AlgorithmIdentifier bytes, tables below are only suggestions, not a requirement.
 
 > [!WARNING]
 > Byte 0x00 is considered to be undefined and must not be used as an algorithm identifier  
