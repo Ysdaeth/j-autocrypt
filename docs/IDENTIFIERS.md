@@ -1,7 +1,7 @@
 # Identifiers bytes convention
-Algorithm identifiers require two bytes, where first byte is the algorithm 
+Algorithm identifiers require two bytes, where first byte is the algorithm
 type, like AES, RSA, HMAC, etc. second byte is algorithm variant like: GCM, OAEP, SHA256(for HMac).
-> [!NOTE] 
+> [!NOTE]
 > It is possible to use own AlgorithmIdentifier bytes, tables below are only suggestions, not a requirement,
 > that's the reason why it was removed from the API module as static variables.
 
@@ -48,7 +48,7 @@ Variant byte range 0x01 to 0xFF
 | Hmac SHA3-224 | 0x80        | 0x07           |
 | Hmac SHA3-256 | 0x80        | 0x08           |
 | Hmac SHA3-384 | 0x80        | 0x09           |
-| Hmac SHA3-512 | 0x80        | 0x10           |
+| Hmac SHA3-512 | 0x80        | 0x0A           |
 
 ### SHA
 | Name     | Type (byte) | Variant (byte) |  
