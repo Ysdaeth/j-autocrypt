@@ -35,7 +35,7 @@ public class HashingManager {
      * @throws AlgorithmIdentificationException When there is no registered implementation
      * assigned to the {@link AlgorithmIdentifier}
      */
-    public AlgorithmOutput hash(byte[] data, Key key, AlgorithmIdentifier identifier)
+    public AlgorithmOutput hash(byte[] data, AlgorithmIdentifier identifier, Key key)
             throws KeyException, AlgorithmIdentificationException {
 
         KeyedHasher authenticator = keyedHasherRegistry.getRegistered(identifier);

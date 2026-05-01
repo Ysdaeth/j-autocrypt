@@ -49,7 +49,7 @@ public class HashingManagerTest {
     void matches_withKey_shouldReturnTrue_whenHashMatches(AlgorithmIdentifier identifier) throws Exception {
         byte[] message = "message".getBytes(StandardCharsets.UTF_8);
         SecretKey hashingKey = Identifiers.generateKey(identifier);
-        AlgorithmOutput output = manager.hash(message, hashingKey, identifier);
+        AlgorithmOutput output = manager.hash(message, identifier, hashingKey);
 
         boolean matches = manager.matches(message, output, hashingKey);
         Assertions.assertTrue(matches, "matches should return true when message and hash matches. Identifier: "+ identifier);
