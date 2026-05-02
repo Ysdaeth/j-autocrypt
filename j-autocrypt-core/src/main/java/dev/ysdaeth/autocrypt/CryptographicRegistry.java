@@ -67,6 +67,7 @@ public class CryptographicRegistry<T extends Cryptographic> {
      * @param algorithms algorithms to register
      * @return registry instance with registered algorithms
      */
+    @SafeVarargs
     public static <T extends Cryptographic> CryptographicRegistry<T> of(T...algorithms){
         CryptographicRegistry<T> registry = new CryptographicRegistry<>();
         for(T encryptor: algorithms) registry.register(encryptor);

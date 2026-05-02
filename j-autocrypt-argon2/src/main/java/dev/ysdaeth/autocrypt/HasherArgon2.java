@@ -27,10 +27,10 @@ public class HasherArgon2 implements Hasher {
     private final SecureRandom random = new SecureRandom();
 
     private final AlgorithmIdentifier identifier;
-    private final Metadata ARGON_METADATA;
-    private int hashLength;
+    private final ArgonMetadata ARGON_METADATA;
+    private final int hashLength;
 
-    private HasherArgon2(AlgorithmIdentifier identifier, Metadata metadata, int hashLength){
+    private HasherArgon2(AlgorithmIdentifier identifier, ArgonMetadata metadata, int hashLength){
         ARGON_METADATA = metadata;
         this.hashLength = hashLength;
         this.identifier = identifier;
@@ -45,7 +45,7 @@ public class HasherArgon2 implements Hasher {
         return new AlgorithmOutput(encoded);
     }
 
-    private byte[] createEncoded(byte[] data, Metadata metadata, byte[] salt, int hashLength){
+    private byte[] createEncoded(byte[] data, ArgonMetadata metadata, byte[] salt, int hashLength){
         Argon2Parameters parameters = new Argon2Parameters.Builder(metadata.argonType)
                 .withVersion(metadata.argonVersion)
                 .withIterations(metadata.iterations)
@@ -84,7 +84,7 @@ public class HasherArgon2 implements Hasher {
      */
     @Override
     public boolean matches(byte[] data, AlgorithmOutput output) {
-        Metadata metadata = validateOutput(output);
+        ArgonMetadata metadata = validateOutput(output);
         if(metadata == null) return false;
         byte[] encoded = output.getEncoded();
         byte[] salt = new byte[metadata.saltLength];
@@ -167,33 +167,34 @@ public class HasherArgon2 implements Hasher {
         if(parallelism > Byte.MAX_VALUE) throw new IllegalArgumentException(
                 "Parallelism value must not be higher than: "+ Byte.MAX_VALUE);
 
-        Metadata metadata = initMetadata(iterations, parallelism, memKB);
+        ArgonMetadata metadata = initMetadata(iterations, parallelism, memKB);
         metadata.argonType = (byte)type;
         metadata.argonVersion = (byte)version;
         return new HasherArgon2(identifier, metadata, hashLength);
 
     }
 
-    private static Metadata initMetadata(int iterations, int parallelism, int memKB){
-        Metadata metadata = new Metadata();
+    private static ArgonMetadata initMetadata(int iterations, int parallelism, int memKB){
+        ArgonMetadata metadata = new ArgonMetadata();
         metadata.iterations = (byte) iterations;
         metadata.parallelism = (byte) parallelism;
         metadata.saltLength = 16;
         metadata.memLimit = memKB;
         return metadata;
     }
-    private Metadata validateOutput(AlgorithmOutput output){
+    private ArgonMetadata validateOutput(AlgorithmOutput output){
         if(!output.getIdentifier().equals(identifier)) return null;
         byte[] encoded = output.getEncoded();
-        if(encoded.length < Metadata.MIN_SIZE) return null;
-        Metadata metadata = Metadata.fromOutput(output);
-        int minWithSalt = Metadata.MIN_SIZE + metadata.saltLength;
+        if(encoded.length < ArgonMetadata.MIN_SIZE) return null;
+        ArgonMetadata metadata = ArgonMetadata.fromOutput(output);
+        int minWithSalt = ArgonMetadata.MIN_SIZE + metadata.saltLength;
         if(minWithSalt > encoded.length) return null;
         return metadata;
     }
 
-    private static final class Metadata {
+    private static final class ArgonMetadata {
         private static final int MIN_SIZE = 11;
+
         byte argonType; // 2 index
         byte argonVersion; // 3 index
         byte iterations; // 4 index
@@ -201,13 +202,12 @@ public class HasherArgon2 implements Hasher {
         byte saltLength; // 6 index
         int memLimit; // 7, 8, 9, 10 index
 
-        private Metadata(){}
+        private ArgonMetadata(){}
 
-        private static Metadata fromOutput(AlgorithmOutput output){
+        private static ArgonMetadata fromOutput(AlgorithmOutput output){
             byte[] encoded = output.getEncoded();
-            if(encoded.length < MIN_SIZE) return null;
 
-            Metadata metadata = new Metadata();
+            ArgonMetadata metadata = new ArgonMetadata();
             metadata.argonType = encoded[2];
             metadata.argonVersion = encoded[3];
             metadata.iterations = encoded[4];

@@ -62,12 +62,12 @@ class EncryptorRegistryTest {
     private static final class MockedEncryptor_1 implements Encryptor{
 
         @Override
-        public AlgorithmOutput encrypt(byte[] raw, Key key) throws KeyException {
+        public AlgorithmOutput encrypt(byte[] data, Key key) throws KeyException {
             return new AlgorithmOutput(new byte[]{1,2,3,4,5});
         }
 
         @Override
-        public byte[] decrypt(AlgorithmOutput encoded, Key key) throws KeyException {
+        public byte[] decrypt(AlgorithmOutput output, Key key) throws KeyException {
             return new byte[]{6,7,8,9,0};
         }
 

@@ -34,9 +34,10 @@ public class HasherSha implements Hasher {
 
     @Override
     public boolean matches(byte[] data, AlgorithmOutput output) {
-        if(!identifier.equals(output.getIdentifier())) return false;
-        byte[] actual = hash(data).getEncoded();
-        return Arrays.equals(output.getEncoded(),actual);
+        boolean idMatches = identifier.equals(output.getIdentifier());
+        if(!idMatches) return false;
+        byte[] recalculated = hash(data).getEncoded();
+        return Arrays.equals(output.getEncoded(),recalculated);
     }
 
     @Override

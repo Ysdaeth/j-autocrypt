@@ -32,13 +32,6 @@ public class AlgorithmOutput {
         this.encoded = encoded;
     }
 
-    public AlgorithmOutput(AlgorithmOutput output) {
-        byte type = output.encoded[0];
-        byte variant = output.encoded[1];
-        this.identifier = new AlgorithmIdentifier(type,variant);
-        this.encoded = output.encoded;
-    }
-
     /**
      * Returns reference to the array bytes that contains algorithm identifier, algorithm variant,
      * and main bytes in a computed bytes array.
@@ -58,6 +51,7 @@ public class AlgorithmOutput {
 
     @Override
     public boolean equals(Object obj) {
+        if(obj == null) return false;
         if(obj instanceof AlgorithmOutput other){
             return Arrays.equals(encoded, other.encoded);
         }

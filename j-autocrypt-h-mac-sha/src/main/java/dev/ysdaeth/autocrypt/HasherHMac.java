@@ -44,17 +44,17 @@ public class HasherHMac implements KeyedHasher {
     /**
      * Tests if data matches the algorithm encoded bytes.
      * @param data data to create the hash
-     * @param encoded hash to compare.
+     * @param output hash to compare.
      * @param key key for the verification
      * @return true if matches, or false when does not match
      * @throws KeyException When key is not initialized, does not match the algorithm, etc.
      */
     @Override
-    public boolean matches(byte[] data, AlgorithmOutput encoded, Key key) throws KeyException {
-        boolean identifierMatches = identifier.equals(encoded.getIdentifier());
+    public boolean matches(byte[] data, AlgorithmOutput output, Key key) throws KeyException {
+        boolean identifierMatches = identifier.equals(output.getIdentifier());
         if(!identifierMatches) return false;
-        AlgorithmOutput actual = hash(data,key);
-        return actual.equals(encoded);
+        AlgorithmOutput recalculated = hash(data,key);
+        return recalculated.equals(output);
     }
 
 

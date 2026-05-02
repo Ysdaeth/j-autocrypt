@@ -12,22 +12,22 @@ public interface Encryptor extends Cryptographic {
     /**
      * Encrypts data and returns encoded bytes and returns {@link AlgorithmOutput}.
      * Throws KeyException when key does not match this algorithm instance.
-     * @param raw data to encrypt
+     * @param data data to encrypt
      * @param key key for encryption
      * @return encoded bytes with metadata and encrypted bytes
      * @throws KeyException When key does not match this algorithm instance
      */
-    AlgorithmOutput encrypt(byte[] raw, Key key) throws KeyException;
+    AlgorithmOutput encrypt(byte[] data, Key key) throws KeyException;
 
     /**
      * Decrypts and returns data from the encoded bytes {@link AlgorithmOutput}. Encoded bytes
      * must be produced by the same instance. KeyException is thrown when key does not match the
      * Encryptor instance or can not be used to decrypt encrypted bytes.
-     * @param encoded bytes produced by this algorithm instance
+     * @param output bytes produced by this algorithm instance
      * @param key key used for encryption
      * @return decrypted raw data
      * @throws KeyException when key does not match the secret, or not match the algorithm instance.
      */
-    byte[] decrypt(AlgorithmOutput encoded, Key key) throws KeyException;
+    byte[] decrypt(AlgorithmOutput output, Key key) throws KeyException;
 
 }

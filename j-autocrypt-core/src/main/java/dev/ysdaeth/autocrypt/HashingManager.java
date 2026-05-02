@@ -19,7 +19,7 @@ public class HashingManager {
             CryptographicRegistry<KeyedHasher> keyedHasherRegistry,
             CryptographicRegistry<Hasher> hasherRegistry){
         this.keyedHasherRegistry = Objects.requireNonNull(keyedHasherRegistry);
-        this.hasherRegistry = hasherRegistry;
+        this.hasherRegistry = Objects.requireNonNull(hasherRegistry);
     }
 
     /**

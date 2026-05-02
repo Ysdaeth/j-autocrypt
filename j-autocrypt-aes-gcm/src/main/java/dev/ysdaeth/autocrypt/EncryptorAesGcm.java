@@ -1,9 +1,5 @@
 package dev.ysdaeth.autocrypt;
 
-import dev.ysdaeth.autocrypt.AlgorithmIdentifier;
-import dev.ysdaeth.autocrypt.AlgorithmOutput;
-import dev.ysdaeth.autocrypt.Encryptor;
-
 import javax.crypto.AEADBadTagException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
@@ -35,7 +31,7 @@ public class EncryptorAesGcm implements Encryptor {
      * Throws Key exception when key does not match the algorithm instance {@link InvalidKeyException}
      * and {@link IllegalStateException} when security provider could not provide cipher instance.
      * Authentication tag is set to 128 bits length.
-     * @param raw raw data to encrypt.
+     * @param data raw data to encrypt.
      * @param key key for data encryption.
      * @return encoded bytes with metadata and encrypted byte array.
      * @throws KeyException when key does not match the algorithm instance,
@@ -43,7 +39,7 @@ public class EncryptorAesGcm implements Encryptor {
      * i.e: key size, not initialized, etc
      */
     @Override
-    public AlgorithmOutput encrypt(byte[] raw, Key key)
+    public AlgorithmOutput encrypt(byte[] data, Key key)
             throws KeyException, IllegalStateException {
 
         GCMParameterSpec spec = generateGcmParams();
@@ -53,13 +49,13 @@ public class EncryptorAesGcm implements Encryptor {
             cipher = Cipher.getInstance(cipherAlgorithm);
             cipher.init(Cipher.ENCRYPT_MODE,key,spec);
             byte[] iv = spec.getIV();
-            output = new byte[3 + iv.length + cipher.getOutputSize(raw.length)];
+            output = new byte[3 + iv.length + cipher.getOutputSize(data.length)];
             output[0] = identifier.type();
             output[1] = identifier.variant();
             output[2] = (byte)iv.length;
             System.arraycopy(iv, 0, output, 3, iv.length);
             int outputDest = 3 + iv.length;
-            cipher.doFinal(raw, 0, raw.length, output, outputDest);
+            cipher.doFinal(data, 0, data.length, output, outputDest);
         }catch (Exception e) {
             if(e instanceof InvalidKeyException) throw (KeyException) e;
             throw new IllegalStateException(e.getMessage(),e);
