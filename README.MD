@@ -3,8 +3,8 @@ Encryption and hashing library for dynamic algorithm resolution,
 eliminating the need of storing the algorithm metadata for decryption and hash comparison.
 
 > [!NOTE]
-> GitHub and Maven packages are not available, to use the library, clone the repository and install dependencies locally.
-> Packages downloads will be available after Jun 2026
+> GitHub and Maven packages will be available after Jun 2026, to use the library.
+> For now clone the repository and install dependencies locally.
 
 Main
 - [How to use](#how-to-use)
