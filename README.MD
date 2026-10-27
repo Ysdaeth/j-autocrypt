@@ -5,27 +5,25 @@ It eliminates the need of storing the algorithm metadata like salt, initial vect
 > [!NOTE]
 > GitHub packages are available to download, but Maven Repository not yet. See [how to install](docs/Installation.md)
 
-Main
 - [How to use](#how-to-use)
 - [Bytes encoding](#bytes-encoding)
 - [Supported algorithms](#supported-algorithms)
-- [TODO list](#target-list)
 - [Requirements](#requirements)
 
 
-- [API MODULE](docs/api/0.Api.md)
-    - [AlgorithmIdentifier](docs/api/1.AlgorithmIdentifier.md)
-    - [AlgorithmOutput](docs/api/2.AlgorithmOutput.md)
-    - [Cryptographic](docs/api/3.Cryptographic.md)
-    - [Encryptor](docs/api/4.Encryptor.md)
-    - [Hasher](docs/api/5.Hasher.md)
-    - [KeyedHasher](docs/api/6.KeyedHasher.md)
+[API MODULE](docs/api/0.Api.md)  
+- [AlgorithmIdentifier](docs/api/1.AlgorithmIdentifier.md)
+- [AlgorithmOutput](docs/api/2.AlgorithmOutput.md)
+- [Cryptographic](docs/api/3.Cryptographic.md)
+- [Encryptor](docs/api/4.Encryptor.md)
+- [Hasher](docs/api/5.Hasher.md)
+- [KeyedHasher](docs/api/6.KeyedHasher.md)
 
 
-- [CORE MODULE](docs/core/0.Core.md)
-    - [CryptographicRegistry](docs/core/1.CryptographicRegistry.md)
-    - [EncryptionManager](docs/core/2.EncryptionManager.md)
-    - [HashingManager](docs/core/3.HashingManager.md)
+[CORE MODULE](docs/core/0.Core.md)
+- [CryptographicRegistry](docs/core/1.CryptographicRegistry.md)
+- [EncryptionManager](docs/core/2.EncryptionManager.md)
+- [HashingManager](docs/core/3.HashingManager.md)
 
 ## Bytes encoding
 Encoded bytes are bytes produced by the algorithm and are wrapped with the [AlgorithmOutput](docs/api/2.AlgorithmOutput.md).
@@ -45,7 +43,7 @@ Metadata bytes are optional and their presence depends on the algorithm implemen
 
 ## How to use
 Take a look at docs  
-[Installation](docs/HowToUse.md)  
+[Installation](docs/Installation.md)  
 [How to use](docs/HowToUse.md)
 
 ## Requirements
